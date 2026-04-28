@@ -1,29 +1,17 @@
-import { useEffect, useMemo } from "react";
-import { usePetStore } from "../store/petStore";
-import GenderToggle from "../components/GenderToggle";
-import CategoryFilters from "../components/CategoryFilters";
-import LetterFilters from "../components/LetterFilters";
-import NamesShowcase from "../components/NamesShowcase";
+import { useEffect } from "react";
+import { usePetStore } from "@/store/petStore";
+import { useFilteredPets } from "@/store/selectors";
+import GenderToggle from "@/components/filters/GenderToggle";
+import CategoryFilters from "@/components/filters/CategoryFilters";
+import LetterFilters from "@/components/filters/LetterFilters";
+import NamesShowcase from "@/components/showcase/NamesShowcase";
 
 function Home() {
-  const pets = usePetStore((s) => s.pets);
-  const genderFilter = usePetStore((s) => s.genderFilter);
-  const selected = usePetStore((s) => s.selectedCategoryIds);
-  const selectedLetter = usePetStore((s) => s.selectedLetter);
-
   useEffect(() => {
     void usePetStore.getState().loadAll();
   }, []);
 
-  const filteredPets = useMemo(() => {
-    return pets.filter((p) => {
-      const genderOk = genderFilter === "B" || p.gender.includes(genderFilter);
-      if (!genderOk) return false;
-      if (selected.length > 0 && !p.categories.some((c) => selected.includes(c))) return false;
-      if (selectedLetter && p.title[0]?.toUpperCase() !== selectedLetter) return false;
-      return true;
-    });
-  }, [pets, genderFilter, selected, selectedLetter]);
+  const filteredPets = useFilteredPets();
 
   return (
     <div className="space-y-4">

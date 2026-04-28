@@ -4,6 +4,10 @@
 
 @theme {
   --color-primary: #e81c24;
+  --color-ink: #3a3533;
+  --color-border: #c9c5b9;
+  --color-surface: #f0ebe5;
+  --color-bg: #f9f8f5;
   --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Roboto Slab", ui-serif, Georgia, serif;
 }
@@ -20,12 +24,12 @@
 
 @layer base {
   html {
-    background-color: #f9f8f5;
+    background-color: theme(--color-bg);
   }
 
   body {
     min-height: 100vh;
     @apply font-serif;
-    background-color: #f9f8f5;
+    background-color: theme(--color-bg);
   }
 }

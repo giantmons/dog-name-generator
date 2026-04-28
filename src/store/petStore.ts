@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { Category, FilterGroup, Pet } from "../types/pet";
-import { getCategories, getLetters, getPets } from "../services/petService";
+import type { Category, FilterGroup, Pet } from "@/types/pet";
+import { getCategories, getLetters, getPets } from "@/services/petService";
 
 type Status = "idle" | "loading" | "ready" | "error";
 

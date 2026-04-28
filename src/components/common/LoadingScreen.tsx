@@ -12,18 +12,6 @@ function LoadingScreen({ visible }: LoadingScreenProps) {
         visible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
       ].join(" ")}
     >
-      {/* Pulsing logo mark */}
-      <div className="flex flex-col items-center gap-3 select-none">
-        <span
-          className="font-serif font-black text-primary leading-none animate-pulse text-[4rem]"
-          aria-hidden="true"
-        >
-          🐾
-        </span>
-        <span className="text-ink/60 text-sm font-sans tracking-widest uppercase">
-          Loading names…
-        </span>
-      </div>
 
       {/* Spinner ring */}
       <svg

@@ -23,29 +23,6 @@ function NameDetails({ pet, onClose }: Props) {
     [pet.categories, byId],
   );
 
-  const handleCopyLink = () => {
-    const url = `${window.location.origin}?name=${encodeURIComponent(pet.title)}`;
-    void navigator.clipboard.writeText(url);
-  };
-
-  const handleShareTwitter = () => {
-    const text = `What do you think of the name "${pet.title}" for a dog?`;
-    window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-  };
-
-  const handleShareMessenger = () => {
-    const url = `${window.location.origin}?name=${encodeURIComponent(pet.title)}`;
-    window.open(
-      `https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=YOUR_APP_ID`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-  };
-
   return (
     <motion.div
       key="details-panel"
@@ -95,31 +72,19 @@ function NameDetails({ pet, onClose }: Props) {
 
           <hr className="border-border" />
 
-          <div className="flex justify-end items-center gap-2">
-            <button
-              type="button"
-              aria-label="Copy link to this name"
-              onClick={handleCopyLink}
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg hover:opacity-80 transition-opacity cursor-pointer"
-            >
+          <div
+            className="flex justify-end items-center gap-2"
+            aria-hidden="true"
+          >
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg">
               <Link2 className="w-3 h-3" strokeWidth={2.25} aria-hidden />
-            </button>
-            <button
-              type="button"
-              aria-label="Share on Twitter / X"
-              onClick={handleShareTwitter}
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg hover:opacity-80 transition-opacity cursor-pointer"
-            >
+            </span>
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg">
               <Share2 className="w-3 h-3" strokeWidth={2} aria-hidden />
-            </button>
-            <button
-              type="button"
-              aria-label="Share via Messenger"
-              onClick={handleShareMessenger}
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg hover:opacity-80 transition-opacity cursor-pointer"
-            >
+            </span>
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-bg">
               <MessageCircle className="w-3 h-3" strokeWidth={2} aria-hidden />
-            </button>
+            </span>
           </div>
         </motion.div>
       </AnimatePresence>

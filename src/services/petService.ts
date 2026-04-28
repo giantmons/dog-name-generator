@@ -5,6 +5,6 @@ import type {
     LettersResponse,
 } from "../types/pet";
 
-export const getPets = () => fetchJSON<PetsResponse>("/public/data/names.json");
-export const getCategories = () => fetchJSON<CategoriesResponse>("/public/data/categories.json");
-export const getLetters = () => fetchJSON<LettersResponse>("/public/data/letters.json");
+export const getPets = () => fetchJSON<PetsResponse>("/data/names.json");
+export const getCategories = () => fetchJSON<CategoriesResponse>("/data/categories.json");
+export const getLetters = () => fetchJSON<LettersResponse>("/data/letters.json");

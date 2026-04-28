@@ -20,7 +20,7 @@ function Home() {
     }
 
     return (
-        <p>
+        <p className="text-red-500 text-2xl font-bold text-center">
             Loaded {petsCount} names across {categoriesCount} categories.
         </p>
     );

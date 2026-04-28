@@ -1,0 +1,51 @@
+import { create } from "zustand";
+import type { Category, FilterGroup, Pet } from "../types/pet";
+import { getCategories, getLetters, getPets } from "../services/petService";
+
+type Status = "idle" | "loading" | "ready" | "error";
+
+interface PetState {
+    pets: Pet[];
+    categories: Category[];
+    filterGroups: FilterGroup[];
+    letters: string[];
+    status: Status;
+    error: string | null;
+    loadAll: () => Promise<void>;
+}
+
+export const usePetStore = create<PetState>((set, get) => ({
+    pets: [],
+    categories: [],
+    filterGroups: [],
+    letters: [],
+    status: "idle",
+    error: null,
+    loadAll: async () => {
+        const { status } = get();
+        if (status === "loading" || status === "ready") return;
+
+        set({ status: "loading", error: null });
+
+        try {
+            const [petsRes, categoriesRes, lettersRes] = await Promise.all([
+                getPets(),
+                getCategories(),
+                getLetters(),
+            ]);
+
+            set({
+                pets: petsRes.data,
+                categories: categoriesRes.data,
+                filterGroups: categoriesRes.filterGroups,
+                letters: lettersRes.data,
+                status: "ready",
+            });
+        } catch (e) {
+            set({
+                status: "error",
+                error: e instanceof Error ? e.message : "Unknown error",
+            });
+        }
+    },
+}));

@@ -1,4 +1,3 @@
-import dogShepherd from "../assets/dogs/dogShepherd.png";
 
 interface LoadingScreenProps {
   visible: boolean;

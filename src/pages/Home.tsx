@@ -6,8 +6,6 @@ import LetterFilters from "../components/LetterFilters";
 import NamesShowcase from "../components/NamesShowcase";
 
 function Home() {
-  const status = usePetStore((s) => s.status);
-  const error = usePetStore((s) => s.error);
   const pets = usePetStore((s) => s.pets);
   const genderFilter = usePetStore((s) => s.genderFilter);
   const selected = usePetStore((s) => s.selectedCategoryIds);

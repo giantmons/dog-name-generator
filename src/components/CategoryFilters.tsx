@@ -92,7 +92,7 @@ function CategoryFilters() {
             transition={{ duration: 0.22, ease: "easeInOut" }}
             className="overflow-hidden border-t border-[#c9c5b9]"
           >
-            <div className="mx-auto grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-3 px-6 py-4">
+            <div className="mx-auto grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-3 px-12 sm:px-24 py-4">
               {openGroup.categoryIds.map((id) => {
                 const cat = byId[id];
                 if (!cat) return null;

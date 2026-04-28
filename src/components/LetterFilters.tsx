@@ -25,7 +25,7 @@ function LetterFilters({ count }: Props) {
       aria-label="Filter by letter"
       className="px-6 py-4 flex flex-col gap-2 items-center"
     >
-      <div className="w-full flex flex-wrap items-center gap-2 mb-3 lg:pl-36">
+      <div className="w-full flex flex-wrap items-center gap-2 mb-3 max-w-4xl">
         {selectedCategories.length === 0 ? (
           <p className="text-base text-[#3a3533]">
             All pets names <span className="text-base text-gray-400 font-normal">({count})</span>
@@ -50,7 +50,7 @@ function LetterFilters({ count }: Props) {
           </>
         )}
       </div>
-      <div className="flex items-center gap-0 bg-white shadow-sm rounded-full px-4 py-2 overflow-x-auto scrollbar-hide w-full md:w-fit">
+      <div className="flex items-center gap-0 bg-white shadow-sm rounded-full px-4 py-2 overflow-x-auto scrollbar-hide w-full lg:w-fit">
         {letters.map((letter) => {
           const active = letter === selectedLetter;
           return (

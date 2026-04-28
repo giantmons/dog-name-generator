@@ -3,7 +3,7 @@ import LoadingScreen from "@/components/common/LoadingScreen";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { usePetStore } from "@/store/petStore";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const status = usePetStore((s) => s.status);

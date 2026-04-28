@@ -389,9 +389,18 @@ function NamesShowcase({ names }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
+  const prevSelectedLetterRef = useRef(selectedLetter);
+
   useEffect(() => {
-    if (selectedLetter || !noCategoryFilters) {
+    const prev = prevSelectedLetterRef.current;
+    prevSelectedLetterRef.current = selectedLetter;
+
+    if (selectedLetter) {
+      // A letter was selected — disable browse-all (letter drives display)
       setExploreAllWithoutLetter(false);
+    } else if (prev) {
+      // Letter was just cleared (regardless of category state) — stay on names
+      setExploreAllWithoutLetter(true);
     }
   }, [selectedLetter, noCategoryFilters]);
 

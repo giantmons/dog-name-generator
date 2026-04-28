@@ -26,7 +26,7 @@ function LetterFilters({ count }: Props) {
       className="px-6 py-4 flex flex-col gap-2 items-center"
     >
       <div className="w-full flex flex-wrap items-center gap-2 mb-3 max-w-4xl">
-        {selectedCategories.length === 0 ? (
+        {selectedCategories.length === 0 && !selectedLetter ? (
           <p className="text-base text-[#3a3533]">
             All pets names <span className="text-base text-gray-400 font-normal">({count})</span>
           </p>
@@ -35,6 +35,17 @@ function LetterFilters({ count }: Props) {
             <span className="text-base text-[#3a3533]">
               Showing results for <span className="text-gray-400 font-normal">({count})</span>:
             </span>
+            {selectedLetter && (
+              <button
+                type="button"
+                onClick={() => setSelectedLetter(null)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary text-white px-3 py-1 text-xs hover:bg-primary/80 transition-all duration-200 cursor-pointer shadow-sm"
+                aria-label={`Remove letter filter ${selectedLetter}`}
+              >
+                Starts with "{selectedLetter}"
+                <span aria-hidden="true">×</span>
+              </button>
+            )}
             {selectedCategories.map((cat) => (
               <button
                 key={cat.id}
@@ -60,10 +71,12 @@ function LetterFilters({ count }: Props) {
               aria-pressed={active}
               onClick={() => setSelectedLetter(active ? null : letter)}
               className={[
-                "flex items-center justify-center w-8 h-8 shrink-0 rounded-full text-md transition-colors cursor-pointer",
+                "flex items-center justify-center w-8 h-8 shrink-0 rounded-full text-md cursor-pointer",
+                "transition-all duration-200 ease-in-out",
+                "hover:scale-110 active:scale-90",
                 active
-                  ? "bg-primary text-white"
-                  : "text-[#3a3533] hover:text-primary",
+                  ? "bg-primary text-white scale-110 shadow-md font-semibold"
+                  : "text-[#3a3533] hover:text-primary hover:bg-primary/10",
               ].join(" ")}
             >
               {letter}

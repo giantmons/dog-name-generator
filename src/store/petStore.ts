@@ -4,6 +4,8 @@ import { getCategories, getLetters, getPets } from "../services/petService";
 
 type Status = "idle" | "loading" | "ready" | "error";
 
+export type GenderFilter = "M" | "F" | "B";
+
 interface PetState {
     pets: Pet[];
     categories: Category[];
@@ -11,6 +13,8 @@ interface PetState {
     letters: string[];
     status: Status;
     error: string | null;
+    genderFilter: GenderFilter;
+    setGenderFilter: (g: GenderFilter) => void;
     loadAll: () => Promise<void>;
 }
 
@@ -21,6 +25,8 @@ export const usePetStore = create<PetState>((set, get) => ({
     letters: [],
     status: "idle",
     error: null,
+    genderFilter: "B",
+    setGenderFilter: (genderFilter) => set({ genderFilter }),
     loadAll: async () => {
         const { status } = get();
         if (status === "loading" || status === "ready") return;

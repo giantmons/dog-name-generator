@@ -1,1 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #e81c24;
+}
+
+@layer base {
+  html {
+    background-color: #f9f8f5;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: "Roboto Slab", ui-serif, Georgia, serif;
+    background-color: #f9f8f5;
+  }
+}

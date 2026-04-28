@@ -27,14 +27,6 @@ function Home() {
     });
   }, [pets, genderFilter, selected, selectedLetter]);
 
-  if (status === "loading" || status === "idle") {
-    return <p>Loading…</p>;
-  }
-
-  if (status === "error") {
-    return <p role="alert">Error: {error}</p>;
-  }
-
   return (
     <div className="space-y-4">
       <div className="p-6 pb-2">

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   ChevronUp,
   ChevronDown,
+  ChevronRight,
   Link2,
   Mars,
   Venus,
@@ -25,6 +26,7 @@ const VISIBLE_COUNT = 7;
 const HALF = Math.floor(VISIBLE_COUNT / 2);
 const CONTAINER_HEIGHT =
   VISIBLE_COUNT * ROW_HEIGHT + (VISIBLE_COUNT - 1) * ROW_GAP;
+const OVERSCAN = 6;
 
 const DISTANCE_STYLES: Record<
   number,
@@ -125,6 +127,9 @@ function WheelPicker({
 
   const translateY = -(activeIndex * STRIDE);
 
+  const start = Math.max(0, activeIndex - HALF - OVERSCAN);
+  const end = Math.min(names.length - 1, activeIndex + HALF + OVERSCAN);
+
   const chevrons = (
     <div
       className="flex flex-col justify-between items-center shrink-0 py-2"
@@ -173,20 +178,26 @@ function WheelPicker({
           animate={{ y: translateY }}
           transition={{ type: "spring", stiffness: 300, damping: 36, mass: 0.8 }}
           style={{
-            gap: ROW_GAP,
-            paddingTop: HALF * STRIDE,
-            paddingBottom: HALF * STRIDE,
+            position: "relative",
+            height: HALF * STRIDE + names.length * STRIDE,
           }}
-          className="flex flex-col select-none"
+          className="select-none"
         >
-          {names.map((pet, idx) => {
+          {names.slice(start, end + 1).map((pet, sliceIdx) => {
+            const idx = start + sliceIdx;
             const distance = Math.abs(idx - activeIndex);
             const { size, color, opacity, weight } = getRowStyle(distance);
             const isActive = distance === 0;
             return (
               <div
                 key={pet.id}
-                style={{ height: ROW_HEIGHT }}
+                style={{
+                  position: "absolute",
+                  top: HALF * STRIDE + idx * STRIDE,
+                  height: ROW_HEIGHT,
+                  left: 0,
+                  right: 0,
+                }}
                 onClick={isActive ? onActiveClick : undefined}
                 className={[
                   "flex items-center justify-center text-center font-serif leading-none tracking-tight transition-colors duration-200",
@@ -312,7 +323,13 @@ function NameDetails({ pet, onClose }: NameDetailsProps) {
   );
 }
 
-function Placeholder() {
+function Placeholder({
+  onBrowseAll,
+  showBrowseChevron,
+}: {
+  onBrowseAll: () => void;
+  showBrowseChevron: boolean;
+}) {
   return (
     <motion.div
       key="placeholder"
@@ -320,9 +337,9 @@ function Placeholder() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="mt-24 flex items-center justify-center py-8"
+      className="relative mt-24 flex items-center justify-center py-8 w-full"
     >
-      <div className="relative flex items-center justify-center w-full max-w-xl">
+      <div className="relative flex items-center justify-center w-full max-w-xl mx-auto">
         <div
           className="absolute bottom-[58%] sm:bottom-[45%] inset-x-0 flex flex-col items-center justify-center text-center font-serif font-black text-primary select-none leading-none text-[6.75rem] sm:text-[8.25rem] md:text-[10rem] lg:text-[11rem] [&>span]:block [&>span]:text-nowrap [&>span]:leading-none"
           aria-hidden="true"
@@ -332,23 +349,57 @@ function Placeholder() {
         </div>
         <img
           src={shepherdImg}
+          loading="lazy"
           alt="A dog waiting for a name"
           className="relative z-10 w-full max-w-[420px] max-h-[420px] object-contain"
         />
       </div>
+      {showBrowseChevron && (
+        <div className="absolute right-[10%] sm:right-[12%] md:right-[14%] top-[calc(50%-12px)] -translate-y-1/2 z-20">
+          <motion.button
+            type="button"
+            aria-label="Browse all names without choosing a letter first"
+            onClick={onBrowseAll}
+            animate={{ x: [-6, 12] }}
+            transition={{
+              x: {
+                duration: 1.35,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+              },
+            }}
+            className="flex items-center justify-center rounded-full border border-[#c9c5b9] bg-[#f9f8f5] p-2.5 shadow-sm text-primary hover:bg-[#f0ebe5] hover:border-[#b8b3a6] transition-colors cursor-pointer touch-manipulation"
+          >
+            <ChevronRight size={36} strokeWidth={2.25} aria-hidden="true" />
+          </motion.button>
+        </div>
+      )}
     </motion.div>
   );
 }
 
 function NamesShowcase({ names }: Props) {
   const selectedLetter = usePetStore((s) => s.selectedLetter);
+  const selectedCategoryIds = usePetStore((s) => s.selectedCategoryIds);
 
+  const noCategoryFilters = selectedCategoryIds.length === 0;
+
+  const [exploreAllWithoutLetter, setExploreAllWithoutLetter] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
+  useEffect(() => {
+    if (selectedLetter || !noCategoryFilters) {
+      setExploreAllWithoutLetter(false);
+    }
+  }, [selectedLetter, noCategoryFilters]);
+
+  const displayNames = names;
+
   const wheelKey = useMemo(
-    () => names.map((p) => p.id).join("|"),
-    [names],
+    () => displayNames.map((p) => p.id).join("|"),
+    [displayNames],
   );
 
   // Reset state whenever the filtered name list changes
@@ -357,12 +408,18 @@ function NamesShowcase({ names }: Props) {
     setDetailsOpen(false);
   }, [wheelKey]);
 
-  const activePet = names[activeIndex] ?? null;
+  const activePet = displayNames[activeIndex] ?? null;
+
+  const showPlaceholder = !selectedLetter && !exploreAllWithoutLetter;
 
   return (
     <AnimatePresence mode="wait">
-      {!selectedLetter ? (
-        <Placeholder key="placeholder" />
+      {showPlaceholder ? (
+        <Placeholder
+          key="placeholder"
+          onBrowseAll={() => setExploreAllWithoutLetter(true)}
+          showBrowseChevron={noCategoryFilters}
+        />
       ) : (
         <motion.div
           key="showcase"
@@ -391,6 +448,7 @@ function NamesShowcase({ names }: Props) {
                   >
                     <img
                       src={dogImg}
+                      loading="lazy"
                       alt="Papillion dog"
                       className="max-h-[420px] w-auto object-contain drop-shadow-md"
                     />
@@ -406,7 +464,7 @@ function NamesShowcase({ names }: Props) {
                     className="flex items-center justify-center w-full py-4"
                   >
                     <WheelPicker
-                      names={names}
+                      names={displayNames}
                       activeIndex={activeIndex}
                       setActiveIndex={setActiveIndex}
                       onActiveClick={() => setDetailsOpen(false)}
@@ -431,7 +489,7 @@ function NamesShowcase({ names }: Props) {
                     className="flex items-center justify-center w-full py-4"
                   >
                     <WheelPicker
-                      names={names}
+                      names={displayNames}
                       activeIndex={activeIndex}
                       setActiveIndex={setActiveIndex}
                       onActiveClick={() => setDetailsOpen(true)}

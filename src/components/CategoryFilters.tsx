@@ -27,7 +27,6 @@ function CategoryFilters() {
   const categories = usePetStore((s) => s.categories);
   const selected = usePetStore((s) => s.selectedCategoryIds);
   const toggle = usePetStore((s) => s.toggleCategory);
-  const clearCategories = usePetStore((s) => s.clearCategories);
 
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -40,20 +39,18 @@ function CategoryFilters() {
     ? (groups.find((g) => g.id === openId) ?? null)
     : null;
 
-  const hasCategorySelection = selected.length > 0;
-
   return (
     <section
       aria-label="Filters"
       className="w-full border-y border-[#c9c5b9] bg-white"
     >
-      <div className="relative flex items-center gap-2 px-4 sm:gap-0 sm:px-6">
+      <div className="flex items-center gap-2 px-4 sm:gap-0 sm:px-6">
         <div className="min-w-0 flex-1 overflow-x-auto [scrollbar-width:thin]">
           <div className="flex w-full min-w-max items-stretch justify-start sm:justify-center">
             <div className="flex shrink-0 items-center py-2 pr-3 text-sm font-semibold text-[#3a3533]">
               Filters:
             </div>
-            <div className="flex shrink-0 items-center gap-4 border-x border-[#c9c5b9] px-6 py-2 font-sans sm:gap-6">
+            <div className="flex shrink-0 items-center gap-4 border-x border-[#c9c5b9] sm:px-10 px-8 py-2 font-sans">
               {groups.map((g) => {
                 const active = g.id === openId;
                 const selectionCount = g.categoryIds.filter((id) =>
@@ -72,11 +69,9 @@ function CategoryFilters() {
                         : "border-transparent text-gray-700 hover:text-gray-900",
                     ].join(" ")}
                   >
-                    {selectionCount > 0 && (
-                      <span className="inline-flex h-[13px] min-w-[11px] shrink-0 items-center justify-center rounded-[2px] bg-primary p-1 text-[10px] tabular-nums leading-none text-white">
-                        {selectionCount}
-                      </span>
-                    )}
+                    <span className={["inline-flex h-[13px] min-w-[11px] shrink-0 items-center justify-center rounded-[2px] bg-primary p-1 text-[10px] tabular-nums leading-none text-white", selectionCount === 0 ? "invisible" : ""].join(" ")}>
+                      {selectionCount || 0}
+                    </span>
                     {g.label}
                     <Chevron open={active} />
                   </button>
@@ -85,16 +80,6 @@ function CategoryFilters() {
             </div>
           </div>
         </div>
-
-        {hasCategorySelection && (
-          <button
-            type="button"
-            onClick={() => clearCategories()}
-            className="shrink-0 rounded-sm border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:absolute sm:right-6 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
-          >
-            Clear
-          </button>
-        )}
       </div>
 
       <AnimatePresence initial={false} mode="wait">
@@ -107,7 +92,7 @@ function CategoryFilters() {
             transition={{ duration: 0.22, ease: "easeInOut" }}
             className="overflow-hidden border-t border-[#c9c5b9]"
           >
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-3 px-6 py-4">
+            <div className="mx-auto grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-3 px-6 py-4">
               {openGroup.categoryIds.map((id) => {
                 const cat = byId[id];
                 if (!cat) return null;

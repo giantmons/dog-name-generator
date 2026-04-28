@@ -2,6 +2,8 @@ import { useEffect, useMemo } from "react";
 import { usePetStore } from "../store/petStore";
 import GenderToggle from "../components/GenderToggle";
 import CategoryFilters from "../components/CategoryFilters";
+import LetterFilters from "../components/LetterFilters";
+import NamesShowcase from "../components/NamesShowcase";
 
 function Home() {
   const status = usePetStore((s) => s.status);
@@ -9,7 +11,7 @@ function Home() {
   const pets = usePetStore((s) => s.pets);
   const genderFilter = usePetStore((s) => s.genderFilter);
   const selected = usePetStore((s) => s.selectedCategoryIds);
-  const categoriesCount = usePetStore((s) => s.categories.length);
+  const selectedLetter = usePetStore((s) => s.selectedLetter);
 
   useEffect(() => {
     void usePetStore.getState().loadAll();
@@ -19,10 +21,11 @@ function Home() {
     return pets.filter((p) => {
       const genderOk = genderFilter === "B" || p.gender.includes(genderFilter);
       if (!genderOk) return false;
-      if (selected.length === 0) return true;
-      return p.categories.some((c) => selected.includes(c));
+      if (selected.length > 0 && !p.categories.some((c) => selected.includes(c))) return false;
+      if (selectedLetter && p.title[0]?.toUpperCase() !== selectedLetter) return false;
+      return true;
     });
-  }, [pets, genderFilter, selected]);
+  }, [pets, genderFilter, selected, selectedLetter]);
 
   if (status === "loading" || status === "idle") {
     return <p>Loading…</p>;
@@ -38,10 +41,8 @@ function Home() {
         <GenderToggle />
       </div>
       <CategoryFilters />
-      <p className="text-2xl font-bold text-center px-6">
-        Showing {filteredPets.length} of {pets.length} names across{" "}
-        {categoriesCount} categories.
-      </p>
+      <LetterFilters count={filteredPets.length} />
+      <NamesShowcase names={filteredPets} />
     </div>
   );
 }

@@ -18,6 +18,8 @@ interface PetState {
   selectedCategoryIds: string[];
   toggleCategory: (id: string) => void;
   clearCategories: () => void;
+  selectedLetter: string | null;
+  setSelectedLetter: (letter: string | null) => void;
   loadAll: () => Promise<void>;
 }
 
@@ -38,6 +40,8 @@ export const usePetStore = create<PetState>((set, get) => ({
         : [...s.selectedCategoryIds, id],
     })),
   clearCategories: () => set({ selectedCategoryIds: [] }),
+  selectedLetter: null,
+  setSelectedLetter: (letter) => set({ selectedLetter: letter }),
   loadAll: async () => {
     const { status } = get();
     if (status === "loading" || status === "ready") return;

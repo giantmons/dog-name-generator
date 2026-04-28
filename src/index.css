@@ -8,6 +8,16 @@
   --font-serif: "Roboto Slab", ui-serif, Georgia, serif;
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   html {
     background-color: #f9f8f5;

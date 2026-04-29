@@ -34,7 +34,11 @@ export class ErrorBoundary extends Component<Props, State> {
           role="alert"
           className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-bg px-6 text-center"
         >
-          <AlertTriangle size={48} className="text-primary" aria-hidden="true" />
+          <AlertTriangle
+            size={48}
+            className="text-primary"
+            aria-hidden="true"
+          />
           <div className="flex flex-col gap-2">
             <h1 className="font-serif text-2xl font-bold text-ink">
               Something went wrong

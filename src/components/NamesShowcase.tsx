@@ -103,7 +103,9 @@ function WheelPicker({
       if (now - lastWheelTime.current < 120) return;
       lastWheelTime.current = now;
       const delta = e.deltaY > 0 ? 1 : -1;
-      setActiveIndex(Math.max(0, Math.min(names.length - 1, activeIndex + delta)));
+      setActiveIndex(
+        Math.max(0, Math.min(names.length - 1, activeIndex + delta)),
+      );
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
@@ -111,7 +113,9 @@ function WheelPicker({
   }, [names, activeIndex, setActiveIndex]);
 
   const move = (delta: number) => {
-    setActiveIndex(Math.max(0, Math.min(names.length - 1, activeIndex + delta)));
+    setActiveIndex(
+      Math.max(0, Math.min(names.length - 1, activeIndex + delta)),
+    );
   };
 
   if (names.length === 0) {
@@ -141,17 +145,17 @@ function WheelPicker({
         onClick={() => move(-1)}
         disabled={activeIndex === 0}
         className="flex items-center justify-center text-primary disabled:opacity-30 cursor-pointer disabled:cursor-default transition-opacity hover:opacity-70"
-        >
-          <ChevronUp size={28} />
-        </button>
-        <button
-          type="button"
-          aria-label="Next name"
-          onClick={() => move(1)}
-          disabled={activeIndex === names.length - 1}
-          className="flex items-center justify-center text-primary disabled:opacity-30 cursor-pointer disabled:cursor-default transition-opacity hover:opacity-70"
-        >
-          <ChevronDown size={28} />
+      >
+        <ChevronUp size={28} />
+      </button>
+      <button
+        type="button"
+        aria-label="Next name"
+        onClick={() => move(1)}
+        disabled={activeIndex === names.length - 1}
+        className="flex items-center justify-center text-primary disabled:opacity-30 cursor-pointer disabled:cursor-default transition-opacity hover:opacity-70"
+      >
+        <ChevronDown size={28} />
       </button>
     </div>
   );
@@ -176,7 +180,12 @@ function WheelPicker({
       >
         <motion.div
           animate={{ y: translateY }}
-          transition={{ type: "spring", stiffness: 300, damping: 36, mass: 0.8 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 36,
+            mass: 0.8,
+          }}
           style={{
             position: "relative",
             height: HALF * STRIDE + names.length * STRIDE,
@@ -293,10 +302,7 @@ function NameDetails({ pet, onClose }: NameDetailsProps) {
             aria-hidden="true"
           >
             <span className="cursor-pointer flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3a3533]">
-              <Link2
-                className="w-3 h-3 text-[#f0ebe5]"
-                strokeWidth={2.25}
-              />
+              <Link2 className="w-3 h-3 text-[#f0ebe5]" strokeWidth={2.25} />
             </span>
             <span className="cursor-pointer flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3a3533]">
               <svg

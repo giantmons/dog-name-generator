@@ -20,7 +20,8 @@ export function useFilteredPets() {
 
   return useMemo(() => {
     return pets.filter((p) => {
-      if (genderFilter !== "B" && !p.gender.includes(genderFilter)) return false;
+      if (genderFilter !== "B" && !p.gender.includes(genderFilter))
+        return false;
       if (
         selectedCategoryIds.length > 0 &&
         !p.categories.some((c) => selectedCategoryIds.includes(c))

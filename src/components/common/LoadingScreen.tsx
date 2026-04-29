@@ -9,10 +9,11 @@ function LoadingScreen({ visible }: LoadingScreenProps) {
       aria-busy={visible}
       className={[
         "fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-bg transition-opacity duration-500",
-        visible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+        visible
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none",
       ].join(" ")}
     >
-
       {/* Spinner ring */}
       <svg
         className="w-10 h-10 animate-spin text-primary"

@@ -25,7 +25,9 @@ function LetterFilters({ count }: Props) {
         {selectedCategories.length === 0 && !selectedLetter ? (
           <p className="text-base text-ink">
             All pet names{" "}
-            <span className="text-base text-gray-400 font-normal">({count})</span>
+            <span className="text-base text-gray-400 font-normal">
+              ({count})
+            </span>
           </p>
         ) : (
           <>

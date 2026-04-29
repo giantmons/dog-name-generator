@@ -26,10 +26,15 @@ function CategoryFilters() {
   const byId = useCategoryMap();
 
   const [openId, setOpenId] = useState<string | null>(null);
-  const openGroup = openId ? (groups.find((g) => g.id === openId) ?? null) : null;
+  const openGroup = openId
+    ? (groups.find((g) => g.id === openId) ?? null)
+    : null;
 
   return (
-    <section aria-label="Filters" className="w-full border-y border-border bg-white">
+    <section
+      aria-label="Filters"
+      className="w-full border-y border-border bg-white"
+    >
       <div className="flex items-center gap-2 px-4 sm:gap-0 sm:px-6">
         <div className="min-w-0 flex-1 overflow-x-auto [scrollbar-width:thin]">
           <div className="flex w-full min-w-max items-stretch justify-start sm:justify-center">

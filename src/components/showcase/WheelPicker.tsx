@@ -38,7 +38,9 @@ function WheelPicker({
   const touchStartY = useRef<number | null>(null);
 
   const move = (delta: number) => {
-    setActiveIndex(Math.max(0, Math.min(names.length - 1, activeIndex + delta)));
+    setActiveIndex(
+      Math.max(0, Math.min(names.length - 1, activeIndex + delta)),
+    );
   };
 
   // Keyboard navigation
@@ -153,7 +155,12 @@ function WheelPicker({
       >
         <motion.div
           animate={{ y: translateY }}
-          transition={{ type: "spring", stiffness: 300, damping: 36, mass: 0.8 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 36,
+            mass: 0.8,
+          }}
           style={{
             position: "relative",
             height: HALF * STRIDE + names.length * STRIDE,

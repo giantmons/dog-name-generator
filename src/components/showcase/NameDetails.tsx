@@ -54,7 +54,9 @@ function NameDetails({ pet, onClose }: Props) {
           <div className="flex items-center gap-2">
             <GenderIcon gender={pet.gender} />
             {categoryNames && (
-              <span className="text-lg font-sans text-ink">{categoryNames}</span>
+              <span className="text-lg font-sans text-ink">
+                {categoryNames}
+              </span>
             )}
           </div>
 

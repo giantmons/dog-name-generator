@@ -8,4 +8,5 @@ import type {
 export const getPets = () => fetchJSON<PetsResponse>("/data/names.json");
 export const getCategories = () =>
   fetchJSON<CategoriesResponse>("/data/categories.json");
-export const getLetters = () => fetchJSON<LettersResponse>("/data/letters.json");
+export const getLetters = () =>
+  fetchJSON<LettersResponse>("/data/letters.json");

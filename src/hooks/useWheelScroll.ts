@@ -32,7 +32,9 @@ export function useWheelScroll({
       if (now - lastWheelTime.current < throttleMs) return;
       lastWheelTime.current = now;
       const delta = e.deltaY > 0 ? 1 : -1;
-      setActiveIndex(Math.max(0, Math.min(listLength - 1, activeIndex + delta)));
+      setActiveIndex(
+        Math.max(0, Math.min(listLength - 1, activeIndex + delta)),
+      );
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });

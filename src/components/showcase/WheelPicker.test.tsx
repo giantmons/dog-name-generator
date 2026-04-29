@@ -40,7 +40,9 @@ describe("WheelPicker", () => {
     );
     const listbox = screen.getByRole("listbox", { name: /pet names/i });
     const options = within(listbox).getAllByRole("option");
-    const active = options.find((o) => o.getAttribute("aria-selected") === "true");
+    const active = options.find(
+      (o) => o.getAttribute("aria-selected") === "true",
+    );
     expect(active).toHaveTextContent("Beta");
   });
 
@@ -55,7 +57,9 @@ describe("WheelPicker", () => {
     );
     const listbox = screen.getByRole("listbox", { name: /pet names/i });
     const options = within(listbox).getAllByRole("option");
-    const inactive = options.filter((o) => o.getAttribute("aria-selected") === "false");
+    const inactive = options.filter(
+      (o) => o.getAttribute("aria-selected") === "false",
+    );
     expect(inactive.length).toBeGreaterThan(0);
   });
 
@@ -100,7 +104,9 @@ describe("WheelPicker", () => {
         onActiveClick={vi.fn()}
       />,
     );
-    expect(screen.getByRole("button", { name: /previous name/i })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /previous name/i }),
+    ).toBeDisabled();
   });
 
   test("Next button is disabled at the last index", () => {

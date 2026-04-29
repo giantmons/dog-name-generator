@@ -18,23 +18,23 @@ Users can scroll through hundreds of dog names using a wheel-picker interface, f
 
 ## Tech Stack
 
-| Layer | Library |
-|---|---|
-| UI framework | React 19 + TypeScript |
-| Build tool | Vite 8 |
-| Styling | Tailwind CSS v4 |
-| State management | Zustand 5 |
-| Animations | Motion (Framer Motion) |
-| Icons | Lucide React |
-| Compiler | React Compiler (via Babel) |
-| Tests | Vitest + Testing Library + jsdom |
+| Layer            | Library                          |
+| ---------------- | -------------------------------- |
+| UI framework     | React 19 + TypeScript            |
+| Build tool       | Vite 8                           |
+| Styling          | Tailwind CSS v4                  |
+| State management | Zustand 5                        |
+| Animations       | Motion (Framer Motion)           |
+| Icons            | Lucide React                     |
+| Compiler         | React Compiler (via Babel)       |
+| Tests            | Vitest + Testing Library + jsdom |
 
 ## Setup
 
 ### Prerequisites
 
 - **Node.js** ≥ 20.19 (Vite 8 requirement)
-- **pnpm** ≥ 9 (recommended). `npm` or `yarn` should work, but the lockfile is `pnpm`.
+- **pnpm** ≥ 9 (recommended).
 
 ### Install & run
 
@@ -47,20 +47,36 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ### Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start dev server with HMR |
-| `pnpm build` | Type-check (`tsc -b`) and build for production |
-| `pnpm preview` | Preview the production build |
-| `pnpm lint` | ESLint |
-| `pnpm format` | Prettier (write) |
-| `pnpm format:check` | Prettier (check only) |
-| `pnpm test` | Run Vitest test suite |
-| `pnpm test:ui` | Run Vitest with the interactive UI |
+| Command                | Description                                     |
+| ---------------------- | ----------------------------------------------- |
+| `pnpm dev`             | Start dev server with HMR                       |
+| `pnpm build`           | Type-check (`tsc -b`) and build for production  |
+| `pnpm preview`         | Preview the production build                    |
+| `pnpm lint`            | ESLint                                          |
+| `pnpm format`          | Prettier (write)                                |
+| `pnpm format:check`    | Prettier (check only)                           |
+| `pnpm test`            | Run Vitest test suite                           |
+| `pnpm test:ui`         | Run Vitest with the interactive UI              |
+| `pnpm storybook`       | Start Storybook dev server on port 6006         |
+| `pnpm build-storybook` | Build a static Storybook to `storybook-static/` |
 
 ### Path aliases
 
 `@/*` resolves to `src/*` (configured in both `tsconfig.app.json` and `vite.config.ts`).
+
+## Storybook
+
+[Storybook](https://storybook.js.org) is configured with `@storybook/react-vite` and the a11y addon. Stories live next to their components and share the app's Tailwind v4 tokens and global styles via `.storybook/preview.ts`.
+
+```bash
+pnpm storybook          # dev server → http://localhost:6006
+pnpm build-storybook    # static build → storybook-static/
+```
+
+| Story file                                        | Stories                                                                 |
+| ------------------------------------------------- | ----------------------------------------------------------------------- |
+| `src/components/showcase/GenderIcon.stories.tsx`  | Male, Female, Both, None                                                |
+| `src/components/showcase/WheelPicker.stories.tsx` | Empty, FewNames, ManyNames, ChevronsLeft, ChevronsRight, MiddleSelected |
 
 ## Architecture
 
@@ -162,13 +178,21 @@ All three files under `public/data/` use a generic `{ data: T, … }` envelope (
 interface Pet {
   id: string;
   title: string;
-  definition: string;        // HTML string (may contain <p> tags, etc.)
-  gender: ("M" | "F")[];     // a name can apply to one or both
-  categories: string[];      // Category.id references
+  definition: string; // HTML string (may contain <p> tags, etc.)
+  gender: ("M" | "F")[]; // a name can apply to one or both
+  categories: string[]; // Category.id references
 }
 
-interface Category { id: string; name: string; description: string | null; }
-interface FilterGroup { id: string; label: string; categoryIds: string[]; }
+interface Category {
+  id: string;
+  name: string;
+  description: string | null;
+}
+interface FilterGroup {
+  id: string;
+  label: string;
+  categoryIds: string[];
+}
 ```
 
 `categories.json` additionally returns a `filterGroups` array used to organise the category UI into themed dropdowns (e.g. "By origin", "By size").
@@ -179,12 +203,5 @@ These are the explicit assumptions baked into the design — call them out if re
 
 - **No backend.** All data lives in `public/data/*.json` and is fetched at startup. There is no auth, no API keys, no pagination, no CORS configuration.
 - **Small, read-only dataset.** ~hundreds of names totalling <500 KB JSON. Loading the full set into memory and filtering client-side is acceptable; no virtualisation of the underlying data is needed (only the rendered rows).
-- **English alphabet only.** `letters.json` is hard-coded A–Z, and the letter filter compares against `Pet.title[0].toUpperCase()`. Non-ASCII titles will not match any letter bucket.
-- **Definitions are trusted HTML.** The `definition` field arrives as HTML (often wrapped in `<p>`). The renderer treats this content as trusted because it is shipped with the build. If the data source ever becomes user-generated, sanitisation (e.g. DOMPurify) must be added.
-- **Gender is `M`, `F`, or both.** A pet's `gender` array contains one or both values. The UI's "Both" filter (`B`) means *show every pet regardless of gender*, not "show only pets tagged with both genders".
+- **Gender is `M`, `F`, or both.** A pet's `gender` array contains one or both values. The UI's "Both" filter (`B`) means _show every pet regardless of gender_, not "show only pets tagged with both genders".
 - **Category filtering is OR, not AND.** Selecting multiple categories widens the result set. This matches the most common "show me anything in these themes" mental model.
-- **`Pet.id` is a stable, unique key.** Used as React keys and to derive the showcase remount key.
-- **Modern evergreen browsers.** Targets ES2023, native WebP, CSS custom properties, and CSS `@theme` (Tailwind v4). No IE / legacy Safari support.
-- **Desktop wheel input is throttled (~120 ms).** Prioritises legibility over raw scroll speed; trackpad users may need multiple flicks to traverse the full list (the alphabet quick-jump exists for that reason).
-- **Decorative imagery is Papillion + Shepherd.** Two breeds are shipped as fixed illustrations; they are not data-driven and not tied to the selected name.
-- **Single-locale UI.** All copy is English; there is no i18n layer.

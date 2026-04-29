@@ -106,6 +106,7 @@ const meta = {
   },
   args: {
     onActiveClick: fn(),
+    setActiveIndex: fn(),
   },
   render: Interactive,
 } satisfies Meta<typeof WheelPicker>;

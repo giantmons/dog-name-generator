@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import type { Pet } from "@/types/pet";
 import { useWheelScroll } from "@/hooks/useWheelScroll";
@@ -12,6 +12,32 @@ import {
   getRowStyle,
 } from "@/constants/showcase";
 import { cn } from "@/utils/cn";
+
+let hintShownThisSession = false;
+
+/** Arrow pointer: white fill + black stroke. */
+function TapHintPointer({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      <path
+        d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"
+        fill="#fff"
+        stroke="#000"
+        strokeWidth={1.15}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 interface Props {
   names: Pet[];
@@ -28,6 +54,14 @@ function WheelPicker({
   onActiveClick,
   chevronsPosition = "right",
 }: Props) {
+  const reduceMotion = useReducedMotion();
+
+  const [showHint] = useState(() => {
+    if (hintShownThisSession) return false;
+    hintShownThisSession = true;
+    return true;
+  });
+
   const scrollAreaRef = useWheelScroll({
     listLength: names.length,
     activeIndex,
@@ -200,6 +234,63 @@ function WheelPicker({
             );
           })}
         </motion.div>
+
+        <AnimatePresence>
+          {showHint && (
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.5 } }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                className="relative isolate translate-x-10 translate-y-4 drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]"
+                animate={
+                  reduceMotion
+                    ? { opacity: [0.65, 1, 0.65] }
+                    : { y: [0, 5, 0, 5, 0] }
+                }
+                transition={
+                  reduceMotion
+                    ? {
+                        duration: 1.8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }
+                    : {
+                        duration: 1.4,
+                        times: [0, 0.2, 0.4, 0.6, 0.8],
+                        delay: 0.3,
+                        repeat: Infinity,
+                        repeatDelay: 0.35,
+                        ease: "easeInOut",
+                      }
+                }
+              >
+                {!reduceMotion && (
+                  <motion.span
+                    className="absolute inset-0 z-0 rounded-full border-2 border-primary/30"
+                    initial={{ scale: 0.55, opacity: 0.4 }}
+                    animate={{
+                      scale: [0.55, 1.75, 0.55, 1.75],
+                      opacity: [0.35, 0, 0.35, 0],
+                    }}
+                    transition={{
+                      duration: 1.4,
+                      delay: 0.3,
+                      repeat: Infinity,
+                      repeatDelay: 0.35,
+                      ease: "easeOut",
+                    }}
+                  />
+                )}
+                <TapHintPointer className="relative z-10" />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {chevronsPosition === "right" && chevrons}

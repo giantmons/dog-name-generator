@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-# Disabled — run `pnpm lint` / `pnpm format:check` locally when you want.
-exit 0
